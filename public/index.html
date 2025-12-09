@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkers Game</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Checkers</h1>
+        </header>
+
+        <main>
+            <!-- Game Controls -->
+            <div id="game-controls">
+                <div id="mode-selector">
+                    <button id="vs-ai-easy">vs AI (Easy)</button>
+                    <button id="vs-ai-medium">vs AI (Medium)</button>
+                    <button id="vs-ai-hard">vs AI (Hard)</button>
+                    <button id="local-2p">Local 2-Player</button>
+                    <button id="online-2p">Online 2-Player</button>
+                </div>
+                <div id="game-actions">
+                    <button id="hint-btn">Hint</button>
+                    <button id="new-game-btn">New Game</button>
+                </div>
+                <div id="game-info">
+                    <p id="current-player">Current Turn: Red</p>
+                    <p id="game-status"></p>
+                </div>
+            </div>
+
+            <!-- Checkers Board -->
+            <div id="board-container">
+                <div id="board"></div>
+            </div>
+
+            <!-- Stats and History -->
+            <div id="sidebar">
+                <div id="stats-view">
+                    <h3>Stats</h3>
+                    <div id="stats-content"></div>
+                </div>
+                <div id="history-view">
+                    <h3>Move History</h3>
+                    <div id="history-content"></div>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <p>Checkers Game - Pure HTML/CSS/JS</p>
+        </footer>
+    </div>
+
+    <script type="module" src="../src/main.js"></script>
+</body>
+</html>
