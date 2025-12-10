@@ -6,7 +6,7 @@
  */
 
 import { createNewGame } from './gameState.js';
-import { initializeBoardView, highlightHint } from './boardView.js';
+import { initializeBoardView, highlightHint, animateMove } from './boardView.js';
 import { getBestMove, getHint } from './ai.js';
 import { PLAYER } from './rules.js';
 
@@ -90,7 +90,7 @@ function startNewGame(mode) {
 /**
  * Make AI move if it's AI's turn
  */
-function makeAIMove() {
+async function makeAIMove() {
     if (!gameState || !aiDifficulty) return;
     if (gameState.isGameOver()) return;
 
@@ -100,20 +100,28 @@ function makeAIMove() {
     if (currentPlayer === PLAYER.BLACK) {
         console.log(`AI (${aiDifficulty}) is thinking...`);
 
-        // Small delay to make AI feel more natural
-        setTimeout(() => {
-            const aiMove = getBestMove(gameState, aiDifficulty);
+        // Calculate AI move
+        const aiMove = getBestMove(gameState, aiDifficulty);
 
-            if (aiMove) {
-                console.log('AI move:', aiMove);
-                const success = gameState.makeMove(aiMove.from, aiMove.to);
+        if (aiMove) {
+            // Get the piece before making the move
+            const board = gameState.getBoard();
+            const piece = board[aiMove.from.row][aiMove.from.col];
 
-                if (success) {
-                    // Re-initialize board view after AI move (but don't pass callback to avoid recursion)
-                    initializeBoardView(gameState, makeAIMove);
-                }
+            // Delay before animating (let player see what the AI is doing)
+            await new Promise(resolve => setTimeout(resolve, 800));
+
+            // Animate the piece moving
+            await animateMove(aiMove.from, aiMove.to, piece);
+
+            console.log('AI move:', aiMove);
+            const success = gameState.makeMove(aiMove.from, aiMove.to);
+
+            if (success) {
+                // Re-initialize board view after AI move
+                initializeBoardView(gameState, makeAIMove);
             }
-        }, 500);
+        }
     }
 }
 

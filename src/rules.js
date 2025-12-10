@@ -296,6 +296,7 @@ export function applyMove(board, move) {
   }
 
   // Promote to king if reached opposite end
+  // RED moves up (to row 0), BLACK moves down (to row 7)
   if (piece === PIECE.RED && move.to.row === 0) {
     newBoard[move.to.row][move.to.col] = PIECE.RED_KING;
   } else if (piece === PIECE.BLACK && move.to.row === 7) {

@@ -340,3 +340,92 @@ export function initializeBoardView(gameState, onMoveComplete = null) {
 export function getCurrentGameState() {
   return currentGameState;
 }
+
+/**
+ * Animate a piece moving from one square to another
+ * @param {Object} from - Source position {row, col}
+ * @param {Object} to - Destination position {row, col}
+ * @param {number} piece - The piece type being moved
+ * @returns {Promise} - Resolves when animation completes
+ */
+export function animateMove(from, to, piece) {
+  return new Promise((resolve) => {
+    const fromSquare = document.querySelector(`[data-row="${from.row}"][data-col="${from.col}"]`);
+    const toSquare = document.querySelector(`[data-row="${to.row}"][data-col="${to.col}"]`);
+    const board = document.getElementById('board');
+
+    if (!fromSquare || !toSquare || !board) {
+      resolve();
+      return;
+    }
+
+    // Highlight source and destination squares
+    fromSquare.classList.add('ai-from');
+    toSquare.classList.add('ai-to');
+
+    // Get positions relative to the board
+    const boardRect = board.getBoundingClientRect();
+    const fromRect = fromSquare.getBoundingClientRect();
+    const toRect = toSquare.getBoundingClientRect();
+
+    // Create animated piece
+    const animatedPiece = createPieceElement(piece);
+    animatedPiece.classList.add('animating');
+
+    // Calculate positions
+    const startX = fromRect.left - boardRect.left + (fromRect.width - 45) / 2;
+    const startY = fromRect.top - boardRect.top + (fromRect.height - 45) / 2;
+    const deltaX = toRect.left - fromRect.left;
+    const deltaY = toRect.top - fromRect.top;
+
+    // Use transform for initial position (avoids reflow)
+    animatedPiece.style.left = '0';
+    animatedPiece.style.top = '0';
+    animatedPiece.style.transform = `translate(${startX}px, ${startY}px)`;
+
+    // Add to board container
+    board.style.position = 'relative';
+    board.appendChild(animatedPiece);
+
+    // Hide original piece
+    const originalPiece = fromSquare.querySelector('.piece');
+    if (originalPiece) {
+      originalPiece.style.visibility = 'hidden';
+    }
+
+    // Force a reflow to ensure initial position is applied before animating
+    animatedPiece.offsetHeight;
+
+    // Trigger animation on next frame
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        animatedPiece.style.transform = `translate(${startX + deltaX}px, ${startY + deltaY}px)`;
+      });
+    });
+
+    // Cleanup after animation
+    setTimeout(() => {
+      animatedPiece.remove();
+      fromSquare.classList.remove('ai-from');
+      toSquare.classList.remove('ai-to');
+      resolve();
+    }, 650); // Slightly longer than transition duration (0.6s)
+  });
+}
+
+/**
+ * Show thinking indicator on a piece
+ * @param {Object} position - Position {row, col}
+ * @returns {Function} - Call to remove the indicator
+ */
+export function showThinkingIndicator(position) {
+  const square = document.querySelector(`[data-row="${position.row}"][data-col="${position.col}"]`);
+  const piece = square?.querySelector('.piece');
+
+  if (piece) {
+    piece.classList.add('ai-thinking');
+    return () => piece.classList.remove('ai-thinking');
+  }
+
+  return () => {};
+}
