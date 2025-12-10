@@ -6,6 +6,68 @@
 
 const puppeteer = require('puppeteer');
 const path = require('path');
+const { spawn } = require('child_process');
+
+// Server configuration
+const SERVER_PORT = 3456;
+const SERVER_URL = `http://localhost:${SERVER_PORT}`;
+let serverProcess = null;
+let serverStarted = false;
+
+// Start the server before all tests
+async function startServer() {
+  if (serverStarted) return;
+
+  return new Promise((resolve, reject) => {
+    serverProcess = spawn('npx', ['serve', '-l', SERVER_PORT, '.'], {
+      cwd: path.join(__dirname, '..'),
+      stdio: ['pipe', 'pipe', 'pipe']
+    });
+
+    serverProcess.stdout.on('data', (data) => {
+      const output = data.toString();
+      if (output.includes('Accepting connections') || output.includes('Local:')) {
+        serverStarted = true;
+        resolve();
+      }
+    });
+
+    serverProcess.stderr.on('data', (data) => {
+      // serve outputs to stderr sometimes, check if it's ready
+      const output = data.toString();
+      if (output.includes('Accepting connections') || output.includes('Local:')) {
+        serverStarted = true;
+        resolve();
+      }
+    });
+
+    // Timeout after 3 seconds
+    setTimeout(() => {
+      serverStarted = true;
+      resolve(); // Assume it's ready
+    }, 3000);
+
+    serverProcess.on('error', reject);
+  });
+}
+
+// Stop the server after all tests
+function stopServer() {
+  if (serverProcess) {
+    serverProcess.kill('SIGTERM');
+    serverProcess = null;
+    serverStarted = false;
+  }
+}
+
+// Global setup/teardown
+beforeAll(async () => {
+  await startServer();
+}, 30000);
+
+afterAll(() => {
+  stopServer();
+});
 
 describe('Checkers App - Puppeteer Tests', () => {
   let browser;
@@ -24,9 +86,7 @@ describe('Checkers App - Puppeteer Tests', () => {
 
   beforeEach(async () => {
     page = await browser.newPage();
-    // Load the HTML file
-    const htmlPath = path.join(__dirname, '../public/index.html');
-    await page.goto(`file://${htmlPath}`);
+    await page.goto(SERVER_URL);
   });
 
   afterEach(async () => {
@@ -79,8 +139,7 @@ describe('Checkers App - Board Rendering Tests', () => {
 
   beforeEach(async () => {
     page = await browser.newPage();
-    const htmlPath = path.join(__dirname, '../public/index.html');
-    await page.goto(`file://${htmlPath}`);
+    await page.goto(SERVER_URL);
     // Wait for board to initialize
     await page.waitForSelector('.square');
   });

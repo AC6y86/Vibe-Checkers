@@ -27,6 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Start default game (local 2-player)
     startNewGame('local-2p');
+    updateModeButtonState('local-2p');
 
     console.log('Checkers app ready!');
 });
@@ -117,29 +118,98 @@ function makeAIMove() {
 }
 
 /**
+ * Update active state on mode buttons
+ */
+function updateModeButtonState(activeMode) {
+    const vsAiBtn = document.getElementById('vs-ai-btn');
+    const local2pBtn = document.getElementById('local-2p');
+    const online2pBtn = document.getElementById('online-2p');
+
+    // Remove active from all
+    vsAiBtn?.classList.remove('active');
+    local2pBtn?.classList.remove('active');
+    online2pBtn?.classList.remove('active');
+
+    // Add active to current mode
+    if (activeMode.startsWith('vs-ai')) {
+        vsAiBtn?.classList.add('active');
+    } else if (activeMode === 'local-2p') {
+        local2pBtn?.classList.add('active');
+    } else if (activeMode === 'online-2p') {
+        online2pBtn?.classList.add('active');
+    }
+}
+
+/**
+ * Update selected state in AI difficulty dropdown
+ */
+function updateAiDifficultySelection(difficulty) {
+    const easyBtn = document.getElementById('vs-ai-easy');
+    const mediumBtn = document.getElementById('vs-ai-medium');
+    const hardBtn = document.getElementById('vs-ai-hard');
+
+    easyBtn?.classList.remove('selected');
+    mediumBtn?.classList.remove('selected');
+    hardBtn?.classList.remove('selected');
+
+    if (difficulty === 'easy') easyBtn?.classList.add('selected');
+    else if (difficulty === 'medium') mediumBtn?.classList.add('selected');
+    else if (difficulty === 'hard') hardBtn?.classList.add('selected');
+}
+
+/**
  * Setup event listeners for game controls
  */
 function setupEventListeners() {
-    // Mode selection buttons
-    document.getElementById('vs-ai-easy')?.addEventListener('click', () => {
+    // Dropdown toggle
+    const dropdown = document.querySelector('.dropdown');
+    const vsAiBtn = document.getElementById('vs-ai-btn');
+
+    vsAiBtn?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        dropdown?.classList.toggle('open');
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', () => {
+        dropdown?.classList.remove('open');
+    });
+
+    // AI difficulty selection
+    document.getElementById('vs-ai-easy')?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        updateAiDifficultySelection('easy');
         startNewGame('vs-ai-easy');
+        updateModeButtonState('vs-ai-easy');
+        dropdown?.classList.remove('open');
     });
 
-    document.getElementById('vs-ai-medium')?.addEventListener('click', () => {
+    document.getElementById('vs-ai-medium')?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        updateAiDifficultySelection('medium');
         startNewGame('vs-ai-medium');
+        updateModeButtonState('vs-ai-medium');
+        dropdown?.classList.remove('open');
     });
 
-    document.getElementById('vs-ai-hard')?.addEventListener('click', () => {
+    document.getElementById('vs-ai-hard')?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        updateAiDifficultySelection('hard');
         startNewGame('vs-ai-hard');
+        updateModeButtonState('vs-ai-hard');
+        dropdown?.classList.remove('open');
     });
 
+    // Other mode buttons
     document.getElementById('local-2p')?.addEventListener('click', () => {
         startNewGame('local-2p');
+        updateModeButtonState('local-2p');
     });
 
     document.getElementById('online-2p')?.addEventListener('click', () => {
         console.log('Online 2-Player not yet implemented');
         // startNewGame('online-2p');
+        // updateModeButtonState('online-2p');
     });
 
     // Game action buttons

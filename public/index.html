@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Checkers Game</title>
-    <link rel="stylesheet" href="./styles.css">
+    <link rel="stylesheet" href="/public/styles.css">
 </head>
 <body>
     <div class="container">
@@ -15,16 +15,21 @@
         <main>
             <!-- Game Controls -->
             <div id="game-controls">
-                <div id="mode-selector">
-                    <button id="vs-ai-easy">vs AI (Easy)</button>
-                    <button id="vs-ai-medium">vs AI (Medium)</button>
-                    <button id="vs-ai-hard">vs AI (Hard)</button>
-                    <button id="local-2p">Local 2-Player</button>
-                    <button id="online-2p">Online 2-Player</button>
+                <div id="mode-selector" class="btn-group">
+                    <div class="dropdown">
+                        <button id="vs-ai-btn" class="btn active">vs AI <span class="dropdown-arrow">▼</span></button>
+                        <div class="dropdown-menu">
+                            <button id="vs-ai-easy">Easy</button>
+                            <button id="vs-ai-medium" class="selected">Medium</button>
+                            <button id="vs-ai-hard">Hard</button>
+                        </div>
+                    </div>
+                    <button id="local-2p" class="btn">Local 2P</button>
+                    <button id="online-2p" class="btn">Online 2P</button>
                 </div>
                 <div id="game-actions">
-                    <button id="hint-btn">Hint</button>
-                    <button id="new-game-btn">New Game</button>
+                    <button id="hint-btn" class="btn btn-secondary">Hint</button>
+                    <button id="new-game-btn" class="btn btn-success">New Game</button>
                 </div>
                 <div id="game-info">
                     <p id="current-player">Current Turn: Red</p>
@@ -55,6 +60,6 @@
         </footer>
     </div>
 
-    <script type="module" src="../src/main.js"></script>
+    <script type="module" src="/src/main.js"></script>
 </body>
 </html>

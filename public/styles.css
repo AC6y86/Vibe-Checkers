@@ -44,35 +44,140 @@ main {
     gap: 20px;
 }
 
-#mode-selector {
+/* Button Group - Horizontal Toggle */
+.btn-group {
     display: flex;
-    flex-direction: column;
-    gap: 10px;
+    flex-wrap: wrap;
+    gap: 0;
+}
+
+.btn-group > .btn,
+.btn-group > .dropdown > .btn {
+    border-radius: 0;
+    border-right: 1px solid rgba(255,255,255,0.2);
+}
+
+.btn-group > .dropdown:first-child > .btn,
+.btn-group > .btn:first-child {
+    border-radius: 5px 0 0 5px;
+}
+
+.btn-group > .btn:last-child {
+    border-radius: 0 5px 5px 0;
+    border-right: none;
+}
+
+/* Dropdown */
+.dropdown {
+    position: relative;
+}
+
+.dropdown-arrow {
+    font-size: 0.7em;
+    margin-left: 4px;
+}
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    min-width: 100%;
+    background: white;
+    border-radius: 5px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    z-index: 100;
+    overflow: hidden;
+    margin-top: 2px;
+}
+
+.dropdown.open .dropdown-menu {
+    display: block;
+}
+
+.dropdown-menu button {
+    display: block;
+    width: 100%;
+    padding: 10px 16px;
+    background: white;
+    color: #333;
+    border: none;
+    border-radius: 0;
+    text-align: left;
+    font-size: 0.9rem;
+}
+
+.dropdown-menu button:hover {
+    background: #f0f0f0;
+}
+
+.dropdown-menu button.selected {
+    background: #e8f4fc;
+    color: #2980b9;
+    font-weight: 600;
 }
 
 #game-actions {
     display: flex;
-    flex-direction: column;
     gap: 10px;
+    margin-top: 15px;
 }
 
-button {
-    padding: 12px 20px;
-    font-size: 1rem;
-    background-color: #3498db;
-    color: white;
-    border: none;
+/* Base Button Styles */
+.btn {
+    padding: 10px 18px;
+    font-size: 0.95rem;
+    background-color: #e0e0e0;
+    color: #555;
+    border: 2px solid #ccc;
     border-radius: 5px;
     cursor: pointer;
-    transition: background-color 0.3s;
+    transition: all 0.2s ease;
+    font-weight: 500;
 }
 
-button:hover {
+.btn:hover {
+    background-color: #d0d0d0;
+    border-color: #bbb;
+}
+
+.btn:active {
+    transform: translateY(1px);
+}
+
+/* Active Mode Button */
+.btn.active {
+    background-color: #3498db;
+    color: white;
+    border-color: #2980b9;
+}
+
+.btn.active:hover {
     background-color: #2980b9;
 }
 
-button:active {
-    transform: translateY(1px);
+/* Secondary Button (Hint) */
+.btn-secondary {
+    background-color: #f5f5f5;
+    color: #666;
+    border-color: #ddd;
+}
+
+.btn-secondary:hover {
+    background-color: #e8e8e8;
+    border-color: #ccc;
+}
+
+/* Success Button (New Game) */
+.btn-success {
+    background-color: #27ae60;
+    color: white;
+    border-color: #219a52;
+}
+
+.btn-success:hover {
+    background-color: #219a52;
+    border-color: #1e8449;
 }
 
 #game-info {
