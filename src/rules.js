@@ -101,10 +101,12 @@ function generateSimpleMoves(board, row, col) {
  * Generate jump moves (captures) for a piece at given position
  * Recursively handles multi-jump sequences
  */
-function generateJumpMovesRecursive(board, row, col, visitedBoard = null, capturedPieces = []) {
+function generateJumpMovesRecursive(board, row, col, visitedBoard = null, capturedPieces = [], originalRow = null, originalCol = null) {
   // Create a copy of the board to track visited positions during multi-jumps
   if (visitedBoard === null) {
     visitedBoard = board.map(row => [...row]);
+    originalRow = row;
+    originalCol = col;
   }
 
   const piece = visitedBoard[row][col];
@@ -142,7 +144,9 @@ function generateJumpMovesRecursive(board, row, col, visitedBoard = null, captur
           landRow,
           landCol,
           newBoard,
-          newCaptured
+          newCaptured,
+          originalRow,
+          originalCol
         );
 
         if (continuedJumps.length > 0) {
@@ -151,7 +155,7 @@ function generateJumpMovesRecursive(board, row, col, visitedBoard = null, captur
         } else {
           // No more jumps available, this is a complete jump sequence
           jumps.push({
-            from: { row, col },
+            from: { row: originalRow, col: originalCol },
             to: { row: landRow, col: landCol },
             isJump: true,
             captured: newCaptured
