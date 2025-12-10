@@ -45,5 +45,8 @@ module.exports = {
   clearMocks: true,
 
   // Puppeteer integration tests timeout
-  testTimeout: 10000
+  testTimeout: 10000,
+
+  // ES Modules support
+  transform: {}
 };
