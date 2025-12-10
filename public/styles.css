@@ -130,6 +130,16 @@ button:active {
     outline: 3px solid #228b22;
 }
 
+.square.hint-from {
+    background-color: #87ceeb;
+    outline: 3px solid #4169e1;
+}
+
+.square.hint-to {
+    background-color: #e0ffff;
+    outline: 2px solid #00ced1;
+}
+
 /* Pieces */
 .piece {
     width: 45px;

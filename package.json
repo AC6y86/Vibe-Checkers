@@ -8,6 +8,7 @@
     "test": "tests"
   },
   "scripts": {
+    "start": "npx serve .",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
